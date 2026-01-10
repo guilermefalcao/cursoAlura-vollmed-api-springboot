@@ -1,4 +1,4 @@
-package med.voll.api.paciente;
+package med.voll.api.domain.paciente;
 
 //record para listagem de pacientes
 //contém apenas os campos essenciais que queremos exibir na listagem

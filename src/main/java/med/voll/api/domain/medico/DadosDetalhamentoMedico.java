@@ -1,6 +1,6 @@
-package med.voll.api.medico;
+package med.voll.api.domain.medico;
 
-import med.voll.api.endereco.Endereco;
+import med.voll.api.domain.endereco.Endereco;
 
 //record para retornar detalhes completos do médico
 //usado principalmente no retorno de operações PUT (atualização)

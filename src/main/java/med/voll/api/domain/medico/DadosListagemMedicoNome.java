@@ -1,4 +1,4 @@
-package med.voll.api.medico;
+package med.voll.api.domain.medico;
 
 //record para listar apenas o nome dos médicos
 //útil quando precisamos de uma listagem mais simples, apenas com nomes
