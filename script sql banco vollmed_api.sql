@@ -25,3 +25,6 @@ DESCRIBE medicos;
 select * from pacientes;
 
 DESCRIBE pacientes;
+
+
+SELECT * FROM usuarios;
