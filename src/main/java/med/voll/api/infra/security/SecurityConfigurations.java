@@ -3,6 +3,7 @@ package med.voll.api.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,14 +27,10 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable()) // Desabilita proteção CSRF pois usaremos JWT (stateless)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura sessão como STATELESS para JWT
                 .authorizeHttpRequests(req -> {
-                    req.anyRequest().permitAll(); // TEMPORÁRIO: Libera todas as rotas para teste do filtro
+                    req.requestMatchers(HttpMethod.POST, "/login").permitAll(); // Libera apenas POST /login
+                    req.anyRequest().authenticated(); // Todas as outras rotas precisam de autenticação
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona nosso filtro customizado
-                .formLogin(form -> form.disable()) // Desabilita form login padrão
-                .httpBasic(basic -> basic.disable()) // Desabilita HTTP Basic Auth
-                .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(401); // Força retorno 401 em vez de 403
-                }))
                 .build();
     }
 

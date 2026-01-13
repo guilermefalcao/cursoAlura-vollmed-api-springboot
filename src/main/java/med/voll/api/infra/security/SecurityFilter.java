@@ -1,7 +1,11 @@
 package med.voll.api.infra.security;
 
+
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -9,9 +13,20 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import med.voll.api.domain.usuario.UsuarioRepository;
 
 @Component //indica que essa classe é um componente gerenciado pelo Spring, que pode ser injetado em outras classes
 public class SecurityFilter extends OncePerRequestFilter { //OncePerRequestFilter garante que o filtro seja executado apenas uma vez por requisição
+
+
+    @Autowired  //vai importar o TokenService para validar o token JWT
+    private TokenService tokenService; //o import é:   med.voll.api.infra.security.TokenService
+  
+    @Autowired
+    private UsuarioRepository repository;
+  
+
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -19,21 +34,22 @@ public class SecurityFilter extends OncePerRequestFilter { //OncePerRequestFilte
                                     FilterChain filterChain)
             throws IOException, ServletException {
         
-        System.out.println("DEBUG: filtro chamado para URL: " + request.getRequestURI());
-        
-        // para recuperar o cabeçalho   
         var tokenJWT = recuperarToken(request);
 
-        if (tokenJWT == null) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Token JWT nao enviado no cabecalho");
-            return;
+        if (tokenJWT != null) {
+            try {
+                var subject = tokenService.getSubject(tokenJWT);
+                var usuario = repository.findByLogin(subject);
+                
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (RuntimeException e) {
+                // Token inválido ou expirado - não autentica o usuário
+                // Spring Security vai bloquear automaticamente
+            }
         }
-
-        System.out.println(tokenJWT);
         
-        // Continua a cadeia de filtros
-        filterChain.doFilter(request, response);  //chama o proximo filtro na cadeia
+        filterChain.doFilter(request, response);
     }
     
     private String recuperarToken(HttpServletRequest request) {

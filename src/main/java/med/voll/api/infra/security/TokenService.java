@@ -40,6 +40,23 @@ public class TokenService { // Classe de serviço relacionada a tokens JWT - ger
         }
     }
 
+    //metodo para validar o token JWT
+    public  String getSubject(String tokenJWT) { //para fazer a validação do token  
+        //System.out.println("DEBUG: Validando token: " + secret);
+        try {
+            var algoritmo = Algorithm.HMAC256(secret);
+            return JWT.require(algoritmo)
+                .withIssuer("API Voll.med")
+                .build()
+                .verify(tokenJWT)
+                .getSubject();
+        } catch (Exception e) {
+            throw new RuntimeException("Token JWT inválido ou expirado");
+        }
+    }
+
+        //
+
     // Método privado que calcula a data de expiração do token (2 horas a partir de agora)
     private Instant dataExpiracao() {
         return LocalDateTime.now()
