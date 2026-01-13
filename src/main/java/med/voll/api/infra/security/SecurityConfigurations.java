@@ -1,5 +1,6 @@
 package med.voll.api.infra.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,11 +11,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration  //serve para indicar que essa classe é uma classe de configuração do Spring
 @EnableWebSecurity //serve para indicar que essa classe é uma configuração de segurança web do Spring
 public class SecurityConfigurations {
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     @Bean //serve para indicar que esse método retorna um bean gerenciado pelo Spring
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -22,10 +26,9 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable()) // Desabilita proteção CSRF pois usaremos JWT (stateless)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura sessão como STATELESS para JWT
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll(); // Permite POST /login
-                    req.requestMatchers("/teste-senha").permitAll(); // Permite teste de senha
-                    req.anyRequest().authenticated(); // Todas as outras rotas precisam de autenticação
+                    req.anyRequest().permitAll(); // TEMPORÁRIO: Libera todas as rotas para teste do filtro
                 })
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona nosso filtro customizado
                 .formLogin(form -> form.disable()) // Desabilita form login padrão
                 .httpBasic(basic -> basic.disable()) // Desabilita HTTP Basic Auth
                 .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {

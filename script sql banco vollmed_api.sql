@@ -28,3 +28,14 @@ DESCRIBE pacientes;
 
 
 SELECT * FROM usuarios;
+
+INSERT INTO usuarios (login, senha) VALUES ('ana.souza@voll.med', '$2a$10$Y50UaMFOxteibQEYLrwuHeehHYfcoafCopUazP12.rqB91YBYAMIm');
+
+
+
+SELECT login, senha FROM usuarios WHERE login = 'ana.souza@voll.med';
+
+UPDATE usuarios 
+SET senha = '$2a$10$/MMNatx9nnu4aoW4ZxTOZOKCRyAvQXC0Yfe.JfvjL4h1wgDXMl33C' 
+WHERE login = 'ana.souza@voll.med';
+
