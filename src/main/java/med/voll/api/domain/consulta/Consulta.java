@@ -2,7 +2,10 @@ package med.voll.api.domain.consulta;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,5 +41,14 @@ public class Consulta {
     private Paciente paciente;
 
     private LocalDateTime data; //data e hora da consulta
+
+    @Column(name = "motivo_cancelamento") //mapeia para a coluna motivo_cancelamento no banco
+    @Enumerated(EnumType.STRING) //armazena o nome do enum como string no banco
+    private MotivoCancelamento motivoCancelamento; //motivo do cancelamento da consulta
+
+    // Método para cancelar a consulta, registrando o motivo
+    public void cancelar(MotivoCancelamento motivo) {
+        this.motivoCancelamento = motivo;
+    }
 
 }

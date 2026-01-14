@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.persistence.EntityNotFoundException;
+import med.voll.api.domain.ValidacaoException;
 
 @RestControllerAdvice //serve para tratar erros de forma global em todos os controllers
 public class TratadorDeErros {
@@ -58,6 +59,13 @@ public class TratadorDeErros {
     public ResponseEntity tratarErro500(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + ex.getLocalizedMessage());
     }
+
+    //para o erro 400 Bad Request - regras de negócio (validações customizadas)
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity tratarErroRegraDeNegocio(ValidacaoException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
 
     //DTO para estruturar erros de validação
     private record DadosErroValidacao(String campo, String mensagem) {
