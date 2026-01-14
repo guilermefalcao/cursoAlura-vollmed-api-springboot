@@ -33,6 +33,11 @@ INSERT INTO usuarios (login, senha) VALUES ('ana.souza@voll.med', '$2a$10$Y50UaM
 
 
 
+SELECT * FROM consultas;
+
+
+
+
 SELECT login, senha FROM usuarios WHERE login = 'ana.souza@voll.med';
 
 UPDATE usuarios 
