@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;  
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;  
 
 @RestController
 @RequestMapping("consultas")  //serve para a rota da controller ser /consultas  
+@SecurityRequirement(name = "bearer-key") //indica que essa controller requer autenticação via bearer token (JWT)
 public class ConsultaController {
 
     @Autowired

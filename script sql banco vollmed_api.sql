@@ -44,3 +44,12 @@ UPDATE usuarios
 SET senha = '$2a$10$/MMNatx9nnu4aoW4ZxTOZOKCRyAvQXC0Yfe.JfvjL4h1wgDXMl33C' 
 WHERE login = 'ana.souza@voll.med';
 
+
+
+-- Criar banco de dados para testes
+CREATE DATABASE vollmed_api_test;
+
+-- Usar o banco de testes
+USE vollmed_api_test;
+
+

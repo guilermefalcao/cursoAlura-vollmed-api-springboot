@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 //import java.net.URI;
 
 import jakarta.transaction.Transactional;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController //serve para indicar que essa classe é um controlador de rotas
 @RequestMapping("/pacientes") //serve para mapear a rota /pacientes para essa classe
+@SecurityRequirement(name = "bearer-key") //indica que essa controller requer autenticação via bearer token (JWT)
 public class PacienteController {
 
     @Autowired //injeção de dependência do repositório de pacientes
